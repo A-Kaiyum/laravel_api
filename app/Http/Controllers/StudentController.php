@@ -14,7 +14,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        //
+        return Student::all();
     }
 
     /**
@@ -35,7 +35,13 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name'=>'required',
+            'city'=>'required',
+            'fees'=>'required',
+        ]);
+
+       return Student::create($request->all());
     }
 
     /**
@@ -44,9 +50,9 @@ class StudentController extends Controller
      * @param  \App\Models\Student  $student
      * @return \Illuminate\Http\Response
      */
-    public function show(Student $student)
+    public function show(Student $id)
     {
-        //
+        return Student::find($id);
     }
 
     /**
@@ -67,9 +73,11 @@ class StudentController extends Controller
      * @param  \App\Models\Student  $student
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Student $student)
+    public function update(Request $request, $id)
     {
-        //
+        $student = Student::findOrfail($id);
+        $student = $student->update($request->all());
+        return response()->json($student);
     }
 
     /**
@@ -78,8 +86,17 @@ class StudentController extends Controller
      * @param  \App\Models\Student  $student
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Student $student)
+    public function search($city)
     {
-        //
+         
+        return Student::where('city',$city)->get();
+
+    }
+    public function destroy($id)
+    {
+        Student::find($id)->delete();
+
+        return Student::all();
+
     }
 }
