@@ -23,7 +23,7 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
 
         ]);
-        $token = $user->createToken($request->name)->plainTextToken;
+        $token = $user->createToken('api-token')->plainTextToken;
         return response([
             'user' => $user,
             'token' => $token,
@@ -39,11 +39,25 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required',
+            'email' => 'required|email',
             'password' => 'required',
 
         ]);
-        $user = User::where('email',$request->email)->first();
-        
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+
+            return response([
+                'message' => 'The provided credential are incorrect.'
+            ], 401);
+        }
+        $token = $user->createToken('api-token')->plainTextToken;
+
+        return response([
+
+            'user' => $user,
+            'token' => $token,
+        ], 201);
     }
 }

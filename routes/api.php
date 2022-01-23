@@ -17,7 +17,7 @@ Route::delete('/students/{id}',[StudentController::class,'destroy']);
  */
 
 Route::post('/register', [UserController::class, 'register']);
-
+Route::post('/login',[UserController::class,'login']);
 //================== Protected Routes==================
 
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -29,6 +29,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/students/search/{city}', [StudentController::class, 'search']);
     Route::delete('/students/{id}', [StudentController::class, 'destroy']);
     Route::post('/logout',[UserController::class,'logout']);
+    
 });
 
 
